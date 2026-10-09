@@ -1,0 +1,25 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: '10.0.x'
+      - name: Restore tools
+        run: dotnet tool restore
+      - name: Restore packages
+        run: dotnet restore SettleTrail.slnx
+      - name: Build
+        run: dotnet build SettleTrail.slnx --no-restore
+      - name: Test
+        run: dotnet test SettleTrail.slnx --no-build

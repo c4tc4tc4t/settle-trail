@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/SettleTrail.Api/SettleTrail.Api.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/SettleTrail.Tests/SettleTrail.Tests.csproj" />
+  </Folder>
+</Solution>
