@@ -25,6 +25,12 @@ The API creates a local SQLite file named `settletrail.db` in `src/SettleTrail.A
 
 In Development, the OpenAPI document is available at http://localhost:5193/openapi/v1.json.
 
+Request and error contract decisions are recorded in [ADR 002](docs/adr-002-api-contracts.md). The [glossary](docs/glossary.md) defines the public payment terms.
+
+## Architecture
+
+The backend is a single deployable application with four projects. `SettleTrail.Domain` owns business models and ledger posting. `SettleTrail.Application` owns CQRS commands, queries, Wolverine handlers, FluentValidation rules, and repository interfaces. `SettleTrail.Infrastructure` implements the repositories and unit of work with EF Core and SQLite. `SettleTrail.Api` owns HTTP contracts, OpenAPI, Problem Details, and dependency injection. Wolverine dispatches commands and queries in process; durable messaging and outbox processing are planned for later stories. See the [Clean Architecture decision](docs/adr-clean-architecture.md).
+
 For later checks, run from the repository root:
 
     dotnet build SettleTrail.slnx
@@ -72,6 +78,14 @@ Transfer R$ 25.00 to another account:
     }
 
 Repeating a request with the same idempotency key and payload returns the original payment. Reusing that key with a different payload returns HTTP 409. Every successful payment writes two ledger entries whose amounts sum to zero. The demo treasury can have a negative balance; regular accounts cannot transfer more than their current balance.
+
+Account names are trimmed and must contain 1 to 100 characters. Amounts must be positive whole minor units. Idempotency keys must contain 1 to 100 characters and are case sensitive. Names and keys cannot contain control characters. Account and payment IDs must be non-empty GUIDs. Source and destination accounts must differ.
+
+Errors use `application/problem+json` and include a stable `code` property alongside `type`, `title`, `status`, and `detail`. Invalid requests return `400` with `invalid_request`. Missing accounts and payments return `404` with `resource_not_found`. Reusing an idempotency key for another payment returns `409` with `idempotency_key_conflict`; insufficient balance returns `409` with `insufficient_funds`. Malformed JSON also returns a `400` problem response.
+
+Example error:
+
+    {"type":"https://tools.ietf.org/html/rfc9110#section-15.5.1","title":"Invalid request","status":400,"detail":"amountMinor must be greater than zero.","code":"invalid_request"}
 
 ## Next backend milestones
 

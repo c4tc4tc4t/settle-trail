@@ -1,6 +1,9 @@
 <Solution>
   <Folder Name="/src/">
     <Project Path="src/SettleTrail.Api/SettleTrail.Api.csproj" />
+    <Project Path="src/SettleTrail.Application/SettleTrail.Application.csproj" />
+    <Project Path="src/SettleTrail.Domain/SettleTrail.Domain.csproj" />
+    <Project Path="src/SettleTrail.Infrastructure/SettleTrail.Infrastructure.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/SettleTrail.Tests/SettleTrail.Tests.csproj" />

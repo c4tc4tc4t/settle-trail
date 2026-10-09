@@ -1,10 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
-namespace SettleTrail.Api.Data;
+using SettleTrail.Domain.Accounts;
+using SettleTrail.Domain.Ledger;
+using SettleTrail.Domain.Payments;
+
+namespace SettleTrail.Infrastructure.Persistence;
 
 public sealed class SettleTrailDbContext(DbContextOptions<SettleTrailDbContext> options) : DbContext(options)
 {
-    public static readonly Guid TreasuryAccountId = Guid.Parse("00000000-0000-0000-0000-000000000001");
+    public static readonly Guid TreasuryAccountId = TreasuryAccount.Id;
 
     public DbSet<Account> Accounts => Set<Account>();
     public DbSet<Payment> Payments => Set<Payment>();
@@ -35,28 +39,3 @@ public sealed class SettleTrailDbContext(DbContextOptions<SettleTrailDbContext> 
     }
 }
 
-public sealed class Account
-{
-    public Guid Id { get; set; }
-    public required string Name { get; set; }
-    public bool IsSystem { get; set; }
-}
-
-public sealed class Payment
-{
-    public Guid Id { get; set; }
-    public Guid SourceAccountId { get; set; }
-    public Guid DestinationAccountId { get; set; }
-    public long AmountMinor { get; set; }
-    public required string IdempotencyKey { get; set; }
-    public required string Kind { get; set; }
-    public DateTimeOffset CreatedAt { get; set; }
-}
-
-public sealed class LedgerEntry
-{
-    public Guid Id { get; set; }
-    public Guid PaymentId { get; set; }
-    public Guid AccountId { get; set; }
-    public long AmountMinor { get; set; }
-}

@@ -13,6 +13,13 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.12" />
+    <PackageReference Include="WolverineFx" Version="6.48.1" />
+    <PackageReference Include="WolverineFx.RuntimeCompilation" Version="6.48.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SettleTrail.Application\SettleTrail.Application.csproj" />
+    <ProjectReference Include="..\SettleTrail.Infrastructure\SettleTrail.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
